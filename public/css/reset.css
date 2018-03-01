@@ -1,0 +1,37 @@
+h1,h2,h3,h4,h5,h6,i,em,strong,ul,b,label{
+	font-style: normal;
+	font-weight: normal;
+	margin: 0;
+	padding: 0;
+}
+body{
+	color: #333;
+}
+li{
+	list-style: none;
+}
+a{
+	text-decoration: none;
+}
+a:active{
+	color: #333;
+}
+a:link{
+	color: #333;
+}
+a:hover{
+	color: #333;
+}
+a:visited{
+	color: #333;
+}
+.container{
+	max-width: 1000px;
+	margin: 0 auto;
+}
+.left{
+	float: left;
+}
+.right{
+	float: right;
+}
