@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>后台管理</title>
+		<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+		<style type="text/css">
+		</style>
+	</head>
+	<body>
+		<!--导航条-->
+		<nav class="navbar navbar-default">
+		  <div class="container-fluid">
+		    <div class="navbar-header">
+		      <a class="navbar-brand" href="/admin">后台管理</a>
+		    </div>
+		
+		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		      <ul class="nav navbar-nav">
+		        <li class="active"><a href="#">用户管理</a></li>
+		        <li><a href="#">分类管理</a></li>
+		      </ul>
+		      <ul class="nav navbar-nav navbar-right">
+		        <li><a href="#">退出</a></li>
+		      </ul>
+		    </div>
+		  </div>
+		</nav>
+		<div class="container-fluid">
+			<div class="jumbotron">
+				<h1>hello,李浩华</h1>
+				<p>欢迎进入我的博客后台管理系统</p>
+			</div>
+		</div>
+		
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+		<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script type="text/javascript">
+			
+			
+			function run(){
+				this.name='lili';
+			}
+			function run1(){
+				run.apply(this)
+				this.age=25;
+				this.sayName=function(){
+					console.log(this.name);
+				}
+			}
+			var a=new run1()
+			a.sayName()
+			
+		</script>
+	</body>
+</html>
+
+<!--{% extends 'layout.html'%}
+{% block main%}
+<div class="container-fluid">
+	<div class="jumbotron">
+		<h1>hello,李浩华</h1>
+		<p>欢迎进入我的博客后台管理系统</p>
+	</div>
+</div>
+
+{% endblock%}-->

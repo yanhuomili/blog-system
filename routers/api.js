@@ -10,6 +10,7 @@ apiRouter.use(function(req,res,next){
 	}
 	next();
 })
+//注册API
 apiRouter.post('/user/register',function(req,res){
 	console.log(req.body)
 	var userN=req.body.username;
@@ -79,5 +80,10 @@ apiRouter.post('/user/login',function(req,res){
 	})
 })
 
+//登出API
+apiRouter.post('/user/logout',function(req,res){
+	req.cookies.set('UserInfo',null);
+	res.json(appData);
+})
 
 module.exports=apiRouter;

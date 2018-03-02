@@ -185,6 +185,8 @@
 							<span>{{userInfo.username}}</span>
 						</div>
 						<p>你好，管理员，欢迎来到我的博客</p>
+						<a href="/admin">进入后台管理<a>
+						<a href="###" class="logout">退出登录</a>
 					</div>
 					
 					
@@ -333,6 +335,19 @@
 				});
 				
 			});
+			
+			//退出登录
+			$('.logout').on('click',function(){
+				$.ajax({
+					type:"post",
+					url:"/api/user/logout",
+					success:function(res){
+						if(res.code==200){
+							window.location.reload();
+						}
+					}
+				});
+			})
 
 		</script>
 	</body>
