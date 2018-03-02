@@ -48,4 +48,18 @@ userRouter.get('/user',function(req,res){
 })
 
 
+//分类首页
+userRouter.get('/category',function(req,res){
+	res.render('admin/category_index',{
+			userInfo:req.userInfo,
+		})
+})
+
+//分类添加
+userRouter.get('/category/add',function(req,res){
+	res.render('admin/category_add',{
+			userInfo:req.userInfo,
+		})
+})
+
 module.exports=userRouter;
