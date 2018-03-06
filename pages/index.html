@@ -18,9 +18,18 @@
 				/*float: left;*/
 				overflow: hidden;
 			}
+			nav .right li{
+				border-bottom: 2px solid transparent;
+			}
+			nav .right .active{
+				border-bottom: 2px solid #f60;
+			}
+			nav .right li:hover{
+				border-bottom-color:#f60;
+			}
 			nav ul li{
 				float: left;
-				padding: 10px 15px;
+				padding: 10px 20px;
 			}
 			.content{
 				width: 100%;
@@ -103,26 +112,22 @@
 		</style>
 	</head>
 	<body>
-		<h1>
-		</h1>
-		{% if userInfo._id %}
-		<p>有id</p>
-		{% else %}
-		<p>没有id</p>
-		{% endif %}
 		<div class="container">
 			<nav>
 				<ul class="left">
-					<li><a href="###">logo</a></li>
+					<li class=""><a href="###">logo</a></li>
 				</ul>
 				<ul class="right">
-					<li><a href="###">首页</a></li>
-					<li><a href="###">bootstrap</a></li>
+					<li class="active"><a href="###">首页</a></li>
+					{% for category in categorys%}
+						<li><a href="###">{{category.name}}</a></li>
+					{%endfor%}
+					<!--<li><a href="###">bootstrap</a></li>
 					<li><a href="###">mui</a></li>
 					<li><a href="###">vue</a></li>
 					<li><a href="###">react</a></li>
 					<li><a href="###">node</a></li>
-					<li><a href="###"></a></li>
+					<li><a href="###"></a></li>-->
 				</ul>
 			</nav>
 			<div class="content">
@@ -185,8 +190,8 @@
 							<span>{{userInfo.username}}</span>
 						</div>
 						<p>你好，管理员，欢迎来到我的博客</p>
-						<a href="/admin">进入后台管理<a>
-						<a href="###" class="logout">退出登录</a>
+						<a href="/user">进入后台管理<a>
+						<a href="/user/logout" class="logout">退出登录</a>
 					</div>
 					
 					
@@ -262,6 +267,11 @@
 				$('.register-wrap').show();
 			})
 			
+//			$('nav .right li').hover(function(){
+//				$(this).addClass('active');
+//			},function(){
+//				$(this).removeClass('active');
+//			})
 			
 			//用户登录
 			$('.login-btn').on('click',function(){

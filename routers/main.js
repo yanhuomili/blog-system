@@ -1,5 +1,6 @@
 const express=require('express');
 const mainRouter=express.Router();
+var Category=require('../modules/category.js');
 const appData={
 	code:200,
 	msg:'默认数据'
@@ -8,12 +9,12 @@ const appData={
 //	res.send(appData);
 //})
 mainRouter.get('/',function(req,res){
-	console.log('main api');
-	appData.code=300,
-	appData.msg='main 接口返回的数据';
-//	res.send(appData);
-	res.render('index',{
-		userInfo:req.userInfo
-	});
+	//读取所有的信息
+	Category.find().then(function(categorys){
+		res.render('index',{
+			userInfo:req.userInfo,
+			categorys:categorys
+		});
+	})
 })
 module.exports=mainRouter;

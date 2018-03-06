@@ -1,0 +1,11 @@
+<nav aria-label="...">
+  <ul class="pager">
+    <li><a href="/user/user?page={{page - 1}}">Previous</a></li>
+     <li>
+    	{{count}}条数据，总共{{pages}}页，每页显示{{limit}}条，当前第{{page}}页
+    </li>
+    <li><a href="/user/user?page={{page + 1}}">Next</a></li>
+  </ul>
+</nav>
+<!--引用该模板的时候，应该模板的页面必须接收到后台传过来的一下数据
+count,pages,limit,page-->

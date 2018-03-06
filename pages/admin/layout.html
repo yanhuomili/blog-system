@@ -15,23 +15,35 @@
 		
 		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		      <ul class="nav navbar-nav">
-		        <li class="active"><a href="#">用户管理</a></li>
-		        <li><a href="#">分类管理</a></li>
+		        <li class="active"><a href="/user/user">用户管理</a></li>
+		        <!--<li><a href="/user/category">分类管理</a></li>-->
+		        <li class="dropdown">
+		          <a href="###" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">分类管理 <span class="caret"></span></a>
+		          <ul class="dropdown-menu">
+		            <li><a href="/user/category">分类首页</a></li>
+		            <li><a href="/user/category/add">分类添加</a></li>
+		          </ul>
+		        </li>
 		      </ul>
 		      <ul class="nav navbar-nav navbar-right">
-		        <li><a href="#">退出</a></li>
+		        <li><a href="/">退出</a></li>
 		      </ul>
 		    </div>
 		  </div>
 		</nav>
 		<div class="container-fluid">
-			<div class="jumbotron">
+			<!--<div class="jumbotron">
 				<h1>hello,李浩华</h1>
 				<p>欢迎进入我的博客后台管理系统</p>
-			</div>
+			</div>-->
+			<!--需要改变的地方使用一下变迁来站稳
+				类似于面型对象的继承和重现
+			-->
+			{%block main%}{%endblock%}
 		</div>
 		
-		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+			
+		<script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
 		<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	</body>
 </html>
