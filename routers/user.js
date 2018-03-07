@@ -2,6 +2,7 @@ const express=require('express');
 const userRouter=express.Router();
 var User=require('../modules/users.js');
 var Category=require('../modules/category.js');
+var Content=require('../modules/content.js');
 
 const appData={
 	code:200,
@@ -236,7 +237,88 @@ userRouter.get('/category/del',function(req,res){
 	})
 })
 
-//test
+
+
+/*内容首页*/
+userRouter.get('/content',function(req,res){
+	var page=Number(req.query.page||1);
+	var limit=3;
+	var pages=0;
+	Content.count().then(function(count){
+		//计算总页数
+		pages=Math.ceil(count/limit);
+		//页数不能超过总页数
+		page=Math.min(page,pages);
+		//取值不能小于1
+		page=Math.max(page,1);
+		//查询忽略的条数，根据页数来查询
+		var skip=(page-1)*limit;
+		
+		/*.populate('category')里面的'category'对应的是Content表结构中的category字段，
+		 * Content表结构中category字段关联的是模型category表结构中的name字段，这里的关系有点复杂。
+		 */
+		
+		Content.find().limit(limit).skip(skip).then(function(contents){
+			console.log(contents);//返回用户数据库的数组
+			res.render('admin/content_index',{
+				userInfo:req.userInfo,
+				contents:contents,//将数据库中的数据传到页面上去
+				
+				count:count,//总条数
+				pages:pages,//总页数
+				page:page,//当前页数
+				limit:limit,//每页显示的条数
+			})
+			
+		})
+	})
+	
+})
+
+/*内容添加*/
+userRouter.get('/content/add',function(req,res){
+	
+	Category.find().sort({_id:-1}).then(function(categorys){
+		console.log(categorys)
+		res.render('admin/content_add',{
+			userInfo:req.userInfo,
+			categorys:categorys
+		})
+	})
+	
+})
+
+//内容保存
+userRouter.post('/content/add',function(req,res){
+	console.log(req.body)
+	if(req.body.category==""){
+		res.render('admin/error',{
+			userInfo:req.userInfo,
+			message:'分类内容不能为空'
+		})
+		return;
+	}
+	if(req.body.title==""){
+		res.render('admin/error',{
+			userInfo:req.userInfo,
+			message:'分类标题不能为空'
+		})
+		return;
+	}
+	new Content({
+		category:req.body.category,
+		title:req.body.title,
+		description:req.body.description,
+		content:req.body.content,
+	}).save().then(function(rs){
+		res.render('admin/success',{
+			userInfo:req.userInfo,
+			message:'内容保存成功',
+			url:'/suer/content'
+		})
+	});
+		
+})
 
 
 module.exports=userRouter;
