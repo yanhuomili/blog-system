@@ -236,6 +236,7 @@ userRouter.get('/category/del',function(req,res){
 	})
 })
 
+//test
 
 
 module.exports=userRouter;
