@@ -256,9 +256,12 @@ userRouter.get('/content',function(req,res){
 		
 		/*.populate('category')里面的'category'对应的是Content表结构中的category字段，
 		 * Content表结构中category字段关联的是模型category表结构中的name字段，这里的关系有点复杂。
+		 * 在查询中如果有多个关联的字段populate(['category','user']),使用数组的方式
 		 */
 		
-		Content.find().limit(limit).skip(skip).then(function(contents){
+		Content.find().limit(limit).skip(skip).populate(['category','users']).sort({
+			addTime:-1
+		}).then(function(contents){
 			console.log(contents);//返回用户数据库的数组
 			res.render('admin/content_index',{
 				userInfo:req.userInfo,
@@ -308,17 +311,101 @@ userRouter.post('/content/add',function(req,res){
 	new Content({
 		category:req.body.category,
 		title:req.body.title,
+		user:req.userInfo._id.toString(),//当前登录用户的id
 		description:req.body.description,
 		content:req.body.content,
 	}).save().then(function(rs){
 		res.render('admin/success',{
 			userInfo:req.userInfo,
 			message:'内容保存成功',
-			url:'/suer/content'
+			url:'/user/content'
 		})
 	});
 		
 })
+
+//删除内容
+userRouter.get('/content/del',function(req,res){
+	//获取需要删除的id
+	var id=req.query.id||'';
+	Content.remove({
+		_id:id
+	}).then(function(){
+		res.render('admin/success',{
+			userInfo:req.userInfo,
+			message:'删除成功',
+			url:'/user/content'
+		})
+	})
+})
+
+
+
+
+
+//内容修改页面
+userRouter.get('/content/edit',function(req,res){
+	//获取需要删除的id
+	var id=req.query.id||'';
+	var categorys=[]
+	Category.find().sort({_id:-1}).then(function(rs){
+		categorys=rs;
+		return Content.findOne({
+			_id:id
+		}).populate('category')
+	}).then(function(content){
+			if(!content){
+				res.render('admin/error',{
+					userInfo:req.userInfo,
+					message:'指定内容不存在'
+				})
+			}else{
+				res.render('admin/content_edit',{
+					userInfo:req.userInfo,
+					categorys:categorys,
+					content:content
+				})
+			}
+		})
+	
+	
+})
+
+//内容修改保存
+userRouter.post('/content/edit',function(req,res){
+	//获取需要删除的id
+	var id=req.query.id||'';
+	if(req.body.category==''){
+		res.render('admin/error',{
+			userInfo:req.userInfo,
+			message:'内容分类不能为空'
+		})
+		return;
+	}
+	if(req.body.title==""){
+		res.render('admin/error',{
+			userInfo:req.userInfo,
+			message:'内容标题不能为空'
+		})
+		return;
+	}
+	Content.update({
+		_id:id
+	},{
+		category:req.body.category,
+		title:req.body.title,
+		description:req.body.description,
+		content:req.body.content,
+	}).then(function(contents){
+		res.render('admin/success',{
+			userInfo:req.userInfo,
+			message:'内容保存',
+			url:'/user/content'
+		})
+	})
+})
+
+
 
 
 module.exports=userRouter;

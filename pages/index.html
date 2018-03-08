@@ -133,51 +133,25 @@
 			<div class="content">
 				<div class="left c-left">
 					<ul>
+						{%for content in contents%}
 						<li>
-							<h3>h5内容标题</h3>
+							<h3>{{content.title}}</h3>
+							<span>作者：{{content.user}}</span>
+							<span>阅读数：{{content.views}}</span>
+							<span>评论数：10</span>
+							
 							<p>
-								该标题下面的文字介绍，在这里省略n个文字
-								该标题下面的文字介绍，在这里省略n个文字
-								该标题下面的文字介绍，在这里省略n个文字
-								该标题下面的文字介绍，在这里省略n个文字
+								{{content.content}}
 							</p>
 							<dl class="">
 								<dt class="left">
-									日期：2018-2-26
+									日期：{{content.addTime|date('Y-m-d H:i:s',-8*60)}}
 								</dt>
 								<dd class="right">查看更多</dd>
 							</dl>
 						</li>
-						<li>
-							<h3>h5内容标题</h3>
-							<p>
-								该标题下面的文字介绍，在这里省略n个文字
-								该标题下面的文字介绍，在这里省略n个文字
-								该标题下面的文字介绍，在这里省略n个文字
-								该标题下面的文字介绍，在这里省略n个文字
-							</p>
-							<dl class="">
-								<dt class="left">
-									日期：2018-2-26
-								</dt>
-								<dd class="right">查看更多</dd>
-							</dl>
-						</li>
-						<li>
-							<h3>h5内容标题</h3>
-							<p>
-								该标题下面的文字介绍，在这里省略n个文字
-								该标题下面的文字介绍，在这里省略n个文字
-								该标题下面的文字介绍，在这里省略n个文字
-								该标题下面的文字介绍，在这里省略n个文字
-							</p>
-							<dl class="">
-								<dt class="left">
-									日期：2018-2-26
-								</dt>
-								<dd class="right">查看更多</dd>
-							</dl>
-						</li>
+						{%endfor%}
+						
 					</ul>
 				</div>
 				<div class="right c-right">
@@ -234,26 +208,6 @@
 			</div>
 		</div>
 		
-		<section class="register">
-			<label>用户名：</label>
-			<input type="text" name="username" id="username" value="lili" />
-			<label>密码：</label>
-			<input type="password" name="password" id="password" value="123" />
-			<button id="register">注册</button>
-		</section>
-		<section class="login">
-			<label>用户名：</label>
-			<input type="text" name="username" id="lo-username" value="lili" />
-			<label>密码：</label>
-			<input type="password" name="password" id="lo-password" value="123" />
-			<button id="login">登录</button>
-		</section>
-		<div>
-			<h3>---</h3>
-			<p>
-				欢迎来到我的博客。
-			</p>
-		</div>
 		<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 		<script type="text/javascript" src="/public/js/index.js"></script>
 		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>

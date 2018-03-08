@@ -30,11 +30,18 @@ app.use(function(req,res,next){
 	req.userInfo={};
 	if(req.cookies.get('UserInfo')){
 		try{
-			req.userInfo=JSON.parse(req.cookies.get('UserInfo'))
-		}catch(e){}
+			req.userInfo=JSON.parse(req.cookies.get('UserInfo'));
+			//获取当前用户的 登录类型,实时查询登录用是否为管理员
+			User.findById(req.userInfo._id).then(function(userInfo){
+				req.userInfo.isAdmin=Boolean(userInfo.isAdmin);
+				next();
+			})
+		}catch(e){next();}
+	}else{
+		next();
 	}
 	
-	next();
+	
 })
 
 

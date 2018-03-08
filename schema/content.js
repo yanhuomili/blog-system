@@ -6,8 +6,8 @@ module.exports=new mongoose.Schema({
 	category:{
 		//类型
 		type:mongoose.Schema.Types.ObjectId,
-		//引用,关联的是Category模型
-		ref:'Category'
+		//引用,关联的是category表结构
+		ref:'category'
 	},
 	//内容标题
 	title:String,
@@ -20,6 +20,26 @@ module.exports=new mongoose.Schema({
 	content:{
 		type:String,
 		default:''
+	},
+	
+	//用户
+	user:{
+		//类型
+		type:mongoose.Schema.Types.ObjectId,
+		//引用,关联的是category表结构
+		ref:'users'
+	},
+	
+	//添加时间
+	addTime:{
+		type:Date,
+		default:new Date()
+	},
+	
+	//阅读量
+	views:{
+		type:Number,
+		default:0
 	}
 	
 })
