@@ -12,19 +12,28 @@ const appData={
 
 //首页
 mainRouter.get('/',function(req,res){
+
 	var data={
 		userInfo:req.userInfo,
 		categorys:[],
+		category:req.query.category||'',
 		count:0,
 		contents:[],
 		page:Number(req.query.page||1),
 		limit:3,
 		pages:0,
 	};
+	console.log(data)
+	
 	//读取所有的分类信息
+	//是否需要条件查询
+	var where={};
+	if(data.category){
+		where.category=data.category
+	}
 	Category.find().then(function(categorys){
 		data.categorys=categorys;
-		return Content.count();
+		return Content.where(where).count();
 	}).then(function(count){
 		data.count=count;
 		//计算总页数
@@ -35,7 +44,7 @@ mainRouter.get('/',function(req,res){
 		data.page=Math.max(data.page,1);
 		//查询忽略的条数，根据页数来查询
 		var skip=(data.page-1)*data.limit;
-		return Content.find().limit(data.limit).skip(skip).populate(['category','users']).sort({
+		return Content.where(where).find().limit(data.limit).skip(skip).populate(['category','users']).sort({
 			addTime:-1
 		})
 	}).then(function(contents){

@@ -53,6 +53,11 @@
 				line-height: 1.8;
 				letter-spacing: 2px;
 				color:#666;
+				/*height: 180px;*/
+				display: -webkit-box;
+ 				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 4;
+ 				overflow: hidden;
 			}
 			
 			.c-left dl{
@@ -118,16 +123,20 @@
 					<li class=""><a href="###">logo</a></li>
 				</ul>
 				<ul class="right">
-					<li class="active"><a href="###">首页</a></li>
-					{% for category in categorys%}
-						<li><a href="###">{{category.name}}</a></li>
+					{%if category==''%}
+						<li class="active"><a href="/">首页</a></li>
+					{%else%}
+						<li><a href="/">首页</a></li>
+					{%endif%}
+
+					{% for cate in categorys%}
+						{%if cate.id==category%}
+							<li class="active"><a href="/?category={{cate.id}}">{{cate.name}}</a></li>
+						{%else%}
+							<li><a href="/?category={{cate.id}}">{{cate.name}}</a></li>
+						{%endif%}
+
 					{%endfor%}
-					<!--<li><a href="###">bootstrap</a></li>
-					<li><a href="###">mui</a></li>
-					<li><a href="###">vue</a></li>
-					<li><a href="###">react</a></li>
-					<li><a href="###">node</a></li>
-					<li><a href="###"></a></li>-->
 				</ul>
 			</nav>
 			<div class="content">
@@ -153,6 +162,27 @@
 						{%endfor%}
 						
 					</ul>
+					<nav aria-label="..." style="width: 100%;padding: 0 30px;box-sizing: border-box;">
+					  <ul class="pager" style="display: flex;justify-content: center;background: #fff;">
+					  	{%if page <=1 %}
+					    <li><a href="javascript:;">Previous</a></li>
+					  	{%else%}
+					    <li><a href="/?category={{category}}&page={{page - 1}}">Previous</a></li>
+					  	{%endif%}
+						{% if pages>0%}
+					    <li><span>{{page}}</span>/<span>{{pages}}</span></li>
+						{%else%}
+					    <li><span>没有数据</span></li>
+						{%endif%}
+
+					    {%if page>=pages %}
+					    <li><a href="javascript:;">没有下一页了</a></li>
+					  	{%else%}
+					    <li><a href="/?category={{category}}&page={{page + 1}}">Next</a></li>
+					  	{%endif%}
+
+					  </ul>
+					</nav>
 				</div>
 				<div class="right c-right">
 					<!--登录-->
