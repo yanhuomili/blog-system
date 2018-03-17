@@ -2,11 +2,13 @@ const express=require('express');
 const mongoose=require('mongoose');
 const apiRouter=express.Router();
 const User=require('../modules/users.js');
+const Content=require('../modules/content.js');
 var appData;
 apiRouter.use(function(req,res,next){
 	 appData={
 		code:200,
-		msg:'默认数据'
+		msg:'默认数据',
+		
 	}
 	next();
 })
@@ -85,5 +87,42 @@ apiRouter.post('/user/logout',function(req,res){
 	req.cookies.set('UserInfo',null);
 	res.json(appData);
 })
+
+//每次加载页面的时候获取所有的评论
+apiRouter.get('/comment',function(req,res){
+	var contentId=req.query.contentid||'';
+	Content.findOne({
+		_id:contentId
+	}).then(function(content){
+		appData.data=content.comments;
+		res.json(appData);
+	})
+})
+
+//提交评论
+apiRouter.post('/comment/post',function(req,res){
+	//内容的id
+	console.log(req.userInfo.username)
+	var contentId=req.body.contentid||"";
+	console.log(contentId);
+	var postData={
+		username:req.userInfo.username,
+		postTime:new Date(),
+		content:req.body.content
+	}
+	//查询当前内容的信息
+	Content.findOne({
+		_id:contentId
+	}).then(function(content){
+		content.comments.push(postData);
+		return content.save();
+	}).then(function(newContent){
+		appData.msg="评论成功";
+		appData.data=newContent;
+		res.json(appData)
+	});
+	
+})
+
 
 module.exports=apiRouter;

@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>首页</title>
+		<title>内容详情</title>
 		<link rel="stylesheet" type="text/css" href="/public/css/index.css"/>
 		<link rel="stylesheet" type="text/css" href="/public/css/reset.css"/>
 		<style type="text/css">
@@ -53,11 +53,10 @@
 				line-height: 1.8;
 				letter-spacing: 2px;
 				color:#666;
-				/*height: 180px;*/
-				display: -webkit-box;
+				/*display: -webkit-box;
  				-webkit-box-orient: vertical;
 				-webkit-line-clamp: 4;
- 				overflow: hidden;
+ 				overflow: hidden;*/
 			}
 			
 			.c-left dl{
@@ -142,47 +141,52 @@
 			<div class="content">
 				<div class="left c-left">
 					<ul>
-						{%for content in contents%}
 						<li>
 							<h3>{{content.title}}</h3>
-							<span>作者：{{content.user}}</span>
+							<span>作者：{{content.user.username}}</span>
 							<span>阅读数：{{content.views}}</span>
 							<span>评论数：10</span>
 							
 							<p>
 								{{content.content}}
 							</p>
-							<dl class="">
-								<dt class="left">
-									日期：{{content.addTime|date('Y-m-d H:i:s',-8*60)}}
-								</dt>
-								<dd class="right"><a href="/view?contentId={{content.id}}">查看更多</a></dd>
-							</dl>
+							
 						</li>
-						{%endfor%}
 						
 					</ul>
+					 
+					<div class="comment-box" style="padding: 30px;">
+						<h3 style="display: flex;justify-content: space-between;">
+							<strong>评论</strong>
+							<span class="comment-num">一共有0条评论</span>
+						</h3>
+						{%if userInfo._id%}
+						<textarea class="comment-text" style="display: block;width: 100%;border: none;resize: none;font-size: 16px;padding: 5px;" name="comment" rows="5" placeholder="请输入您的评论"></textarea>
+						<input type="hidden" id="contentId" value="{{content.id}}"/>
+						<button class="comment-btn" style="display: block;width: 60%;border: none;outline: 0 none;font-size: 16px; padding: 15px 10px;margin: 20px auto;">提交</button>
+						{%else%}
+						<p style="width: 100%;background: #f60;color: #fff; text-align: center;padding: 5px;">您还没有登录，请登录</p>
+						{%endif%}
+					</div>
+					<div class="message-list">
+						<!--<dl class="message-item">
+							<dt style="display: flex;justify-content: space-between;margin: 0;">
+								<strong>用户</strong>
+								<span>2018-3-17</span>
+							</dt>
+							<dd style="margin:5px 0 0 0;">士大夫绿山咖啡我而烦恼了男方了双方是</dd>
+						</dl>-->
+						
+					</div>
+					
 					<nav aria-label="..." style="width: 100%;padding: 0 30px;box-sizing: border-box;">
 					  <ul class="pager" style="display: flex;justify-content: center;background: #fff;">
-					  	{%if page <=1 %}
-					    <li><a href="javascript:;">Previous</a></li>
-					  	{%else%}
-					    <li><a href="/?category={{category}}&page={{page - 1}}">Previous</a></li>
-					  	{%endif%}
-						{% if pages>0%}
-					    <li><span>{{page}}</span>/<span>{{pages}}</span></li>
-						{%else%}
-					    <li><span>没有数据</span></li>
-						{%endif%}
-
-					    {%if page>=pages %}
-					    <li><a href="javascript:;">没有下一页了</a></li>
-					  	{%else%}
-					    <li><a href="/?category={{category}}&page={{page + 1}}">Next</a></li>
-					  	{%endif%}
-
+					    <li><a class="prev" href="javascript:;">Previous</a></li>
+					    <li class="pageInfo">1/1</li>
+					    <li><a class="next" href="javascript:;">Next</a></li>
 					  </ul>
 					</nav>
+					
 				</div>
 				<div class="right c-right">
 					<!--登录-->
@@ -240,7 +244,7 @@
 		
 		<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 		<script type="text/javascript" src="/public/js/index.js"></script>
-		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+		<!--<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>-->
 		<script type="text/javascript">
 			$('.go-login').on('click',function(){
 				$('.login-wrap').show();
@@ -342,7 +346,103 @@
 					}
 				});
 			})
-
+			
+			
+			
+			var prepage=5;
+			var page=1;
+			var pages=0;
+			var data=[];
+			$('.prev').on('click',function(){
+				page--;
+				commentRender()
+			})
+			$('.next').on('click',function(){
+				page++;
+				commentRender()
+			})
+			//每次页面重载的时候获取文章的所有评论
+			$.ajax({
+				url:"/api/comment",
+				data:{
+					contentid:$('#contentId').val(),
+				},
+				success:(function(res){
+					data=res.data;
+					commentRender();
+				})
+			});
+		
+			//提交评论
+			$('.comment-btn').on('click',function(req,res){
+				if(!$('.comment-text').val()){
+					return;
+				}
+				$.ajax({
+					type:"POST",
+					url:"/api/comment/post",
+					data:{
+						contentid:$('#contentId').val(),
+						content:$('.comment-text').val()
+					},
+					success:(function(res){
+						data=res.data.comments
+						commentRender();
+					})
+				});
+				$('.comment-text').val('');
+			})
+			
+			function commentRender(){
+				//reverse()将数据反转一下，这样最新加载的数据就在最前面
+				data.reverse();
+				$('.message-list').html('');
+				
+				if(data.length==0){
+					$('.message-list').html('<h5 style="text-align: center;padding: 10px;">还没有评论</h5>');
+					return;
+				}
+				//总页数
+				pages=Math.max(Math.ceil(data.length/prepage),1);
+				var start=Math.max(0,(page-1)*prepage);
+				var end=Math.min(start+prepage,data.length);
+				$('.pageInfo').text(page+'/'+pages);	
+				if(page<=1){
+					page=1;
+					$('.prev').text('没有上一页');
+				}else{
+					$('.prev').text('Prev');
+				}
+				if(page>=pages){
+					page=pages;
+					$('.next').text('没有下一页');
+				}else{
+					$('.next').text('Next');
+				}
+				
+				$('.comment-num').text('一共有'+data.length+'条评论');
+				var fragment=document.createDocumentFragment();
+				for(var i=start;i<end;i++){
+					var str='<dl class="message-item">'
+							+'<dt style="display: flex;justify-content: space-between;margin: 0;">'
+								+'<strong>'+data[i].username+'</strong>'
+								+'<span>'+formDate(data[i].postTime)+'</span>'
+							+'</dt>'
+							+'<dd style="margin:5px 0 0 0;">'+data[i].content+'</dd>'
+				+'</dl>'
+					$(fragment).append($(str));	
+					
+				}
+				$('.message-list').append($(fragment));
+			}
+			
+			function formDate(d){
+				var date=new Date(d);
+				return date.getFullYear()+'年'+(date.getMonth()+1)+'月'+date.getDate()+'日 '+date.getHours()+':'+date.getMinutes()+':'+date.getSeconds()
+			}
+			
+			
+			
 		</script>
 	</body>
 </html>

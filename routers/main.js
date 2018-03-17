@@ -9,20 +9,28 @@ const appData={
 //mainRouter.use(function(	req,res,next){
 //	res.send(appData);
 //})
-
+var data;
+mainRouter.use(function(req,res,next){
+	data={
+		userInfo:req.userInfo,
+		categorys:[],
+	}
+	Category.find().then(function(categorys){
+		data.categorys=categorys;
+		next();
+	})
+	
+	
+	
+})
 //首页
 mainRouter.get('/',function(req,res){
 
-	var data={
-		userInfo:req.userInfo,
-		categorys:[],
-		category:req.query.category||'',
-		count:0,
-		contents:[],
-		page:Number(req.query.page||1),
-		limit:3,
-		pages:0,
-	};
+	data.category=req.query.category||'',
+	data.count=0,
+	data.page=Number(req.query.page||1),
+	data.limit=3,
+	data.pages=0,
 	console.log(data)
 	
 	//读取所有的分类信息
@@ -31,10 +39,8 @@ mainRouter.get('/',function(req,res){
 	if(data.category){
 		where.category=data.category
 	}
-	Category.find().then(function(categorys){
-		data.categorys=categorys;
-		return Content.where(where).count();
-	}).then(function(count){
+	//读取栏目分类
+	Content.where(where).count().then(function(count){
 		data.count=count;
 		//计算总页数
 		data.pages=Math.ceil(data.count/data.limit);
@@ -48,12 +54,29 @@ mainRouter.get('/',function(req,res){
 			addTime:-1
 		})
 	}).then(function(contents){
+		//这里的contents是一个数组，在页面渲染的时候要用for循环
 		data.contents=contents;
 		console.log(data);
 		res.render('index',data);
 	})
 })
+//查看详情
+mainRouter.get('/view',function(req,res){
+	var contentId=req.query.contentId||'';
+	Content.findOne({
+		_id:contentId
+	}).then(function(content){
+		//这里的content不是一个数组，仅仅是一个对象，所以在页面渲染的时候不用for循环
+		data.content=content;
+		content.views++;//阅读数量
+		content.save();//保存阅读数量
+		res.render('view',data);
+	})
+})
+
+
 module.exports=mainRouter;
 
 
 //2018-3-8  21:00 提交
+//2018-3-17 22:11 提交，已经算是完成了该项目
