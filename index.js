@@ -1,12 +1,13 @@
-const express=require('express');
-const mongoose=require('mongoose');
-const swig=require('swig');
-const bodyParser=require('body-parser');
-const Cookies=require('cookies');
+const express=require('express');//使用node中express模块来搭建本地服务器
+const mongoose=require('mongoose');//使用mongoose来操作mongodb数据库
+const swig=require('swig');//使用swig模板来渲染页面
+const bodyParser=require('body-parser');//使用bodyParser来解析请求，get:使用req.query,post:使用req.body
+const Cookies=require('cookies');//使用cookies模块来记录用户登录状态
 const app=express();
-const apiRouter=require('./routers/api');
-const mainRouter=require('./routers/main');
-const userRouter=require('./routers/user');
+//将api分为三个部分
+const apiRouter=require('./routers/api');//用于用户的操作请求api
+const mainRouter=require('./routers/main');//用户访问页面，查看详情等api
+const userRouter=require('./routers/user');//用于后台管理api
 //静态文件的处理
 app.use('/public',express.static(__dirname+'/public'));
 
@@ -60,13 +61,14 @@ app.use('/user',userRouter);
 //	console.log('服务器开启成功');
 //	res.send('hello world');
 //})
-
+//使用mongoose来连接数据库
 mongoose.connect('mongodb://localhost:27017/blog',function(err){
 	if(err){
 		console.log(err);
 		console.log('数据库连接失败');
 	}else{
 		console.log('数据库连接成功');
+		//当数据库连接成功之后再开服服务器
 		app.listen(8080);
 	}
 });

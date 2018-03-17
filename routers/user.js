@@ -1,7 +1,10 @@
 const express=require('express');
 const userRouter=express.Router();
+//加载user数据模型，通过模型来操作数据库。
 var User=require('../modules/users.js');
+//加载分类数据模型
 var Category=require('../modules/category.js');
+//加载内容数据模型
 var Content=require('../modules/content.js');
 
 const appData={
