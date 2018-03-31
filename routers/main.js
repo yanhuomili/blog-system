@@ -21,7 +21,7 @@ mainRouter.use(function(req,res,next){
 	})
 	
 	
-	
+	/////////
 })
 //首页
 mainRouter.get('/',function(req,res){
